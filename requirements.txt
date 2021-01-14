@@ -1,4 +1,4 @@
-requests==2.18.4
-discogs_client==2.2.1
-mutagen==1.38
-pillow==4.3.0
+requests==2.25.1
+discogs_client==2.3.0
+mutagen==1.45.1
+Pillow==8.0.1
