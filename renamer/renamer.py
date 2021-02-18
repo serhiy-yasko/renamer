@@ -198,11 +198,24 @@ def main():
             track for track in release.tracklist if track.position \
                 or len(track.data.get('sub_tracks', [])) > 0
         ]
+
+        # Handle a rare case of mash-up tracks on mixed compilations
+        # listed without durations
+        any_duration_absent = any(
+            len(track.duration) < 1 for track in prepared_tracks)
+        if any_duration_absent and files_count != len(prepared_tracks):
+            prepared_tracks = [
+                track for track in prepared_tracks if track.duration]
+
         fetched_release_info["artist"] = release.artists[0].name
         fetched_release_info["tracklist"] = [
             track.title for track in prepared_tracks]
         fetched_release_info["year"] = release.year
-        if any(len(track.artists) > 1 for track in prepared_tracks):
+        total_artists = len(
+            set(track.artists[0].name for track in prepared_tracks))
+        multiple_track_artists = any(
+            len(track.artists) > 1 for track in prepared_tracks)
+        if multiple_track_artists or total_artists > 1:
             fetched_release_info["various"] = True
 
     if opts.catno:
